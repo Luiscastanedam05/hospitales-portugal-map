@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mapa de Hospitales de Portugal</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <style>
+        #map { height: 600px; width: 100%; }
+    </style>
+</head>
+<body>
+    <div id="map"></div>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script>
+        // Inicializar el mapa
+        const map = L.map('map').setView([39.5, -8.0], 7); // Centro inicial en Portugal
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        }).addTo(map);
+
+        // Lista de hospitales con coordenadas
+        const hospitals = [
+            { name: "Hospital de Abrantes", coords: [39.4631, -8.1976] },
+            { name: "Hospital Pedro Hispano", coords: [41.1849, -8.6557] },
+            { name: "Hospital Castelo Branco", coords: [39.8197, -7.4966] },
+            { name: "Hospital de Aveiro", coords: [40.6269, -8.6413] },
+            { name: "Hospital Santa Maria (Lisboa)", coords: [38.7498, -9.1597] },
+            { name: "Clínica CUF Sintra", coords: [38.7680, -9.3330] },
+            { name: "Hospital Espírito Santo Évora", coords: [38.5714, -7.9135] },
+            { name: "Centro Hospitalar Barreiro Montijo", coords: [38.6697, -9.0624] },
+            { name: "Hospital José Joaquim Fernandes", coords: [38.0151, -7.8630] }
+        ];
+
+        // Añadir marcadores para cada hospital
+        hospitals.forEach(hospital => {
+            L.marker(hospital.coords).addTo(map)
+                .bindPopup(`<b>${hospital.name}</b><br>Lat: ${hospital.coords[0]}, Lon: ${hospital.coords[1]}`);
+        });
+
+        // Ajustar el mapa para mostrar todos los marcadores
+        if (hospitals.length > 0) {
+            const group = new L.featureGroup(hospitals.map(hospital => L.marker(hospital.coords)));
+            map.fitBounds(group.getBounds().pad(0.1)); // Añade un pequeño margen
+        }
+    </script>
+</body>
+</html>
